@@ -48,11 +48,11 @@ import com.example.studysmartapp.presentation.components.tasksList
 @Composable
 fun DashBoardScreen(){
     val subjects= listOf(
-        Subject("English", goalHours = 10f, colors = Subject.subjectsCardColors[0]),
-        Subject("Maths", goalHours = 10f, colors = Subject.subjectsCardColors[1]),
-        Subject("physics", goalHours = 10f, colors = Subject.subjectsCardColors[2]),
-        Subject("Geology", goalHours = 10f, colors = Subject.subjectsCardColors[3]),
-        Subject("Fine Arts", goalHours = 10f, colors = Subject.subjectsCardColors[4]),
+        Subject("English", goalHours = 10f, colors = Subject.subjectsCardColors[0], subjectId = 0),
+        Subject("Maths", goalHours = 10f, colors = Subject.subjectsCardColors[1], subjectId = 0),
+        Subject("physics", goalHours = 10f, colors = Subject.subjectsCardColors[2], subjectId = 0),
+        Subject("Geology", goalHours = 10f, colors = Subject.subjectsCardColors[3], subjectId = 0),
+        Subject("Fine Arts", goalHours = 10f, colors = Subject.subjectsCardColors[4], subjectId = 0),
     )
     val tasks= listOf(
         Task(
@@ -61,35 +61,45 @@ fun DashBoardScreen(){
             dueDate = 0L,
             priority = 1,
             relatedToSubject = "",
-            isComplete = false),
+            isComplete = false,
+            taskSubjectId = 0,
+            taskId = 1),
         Task(
             title="Do Homework",
             description = "",
             dueDate = 0L,
-            priority = 1,
+            priority = 2,
             relatedToSubject = "",
-            isComplete = true),
+            isComplete = true,
+            taskSubjectId = 0,
+            taskId = 1),
         Task(
             title="Go Coaching",
             description = "",
             dueDate = 0L,
-            priority = 1,
+            priority = 0,
             relatedToSubject = "",
-            isComplete = false),
+            isComplete = false,
+            taskSubjectId = 0,
+            taskId = 1),
         Task(
             title="Assignment",
             description = "",
             dueDate = 0L,
             priority = 1,
             relatedToSubject = "",
-            isComplete = false),
+            isComplete = false,
+            taskSubjectId = 0,
+            taskId = 1),
         Task(
             title="Write Poem",
             description = "",
             dueDate = 0L,
-            priority = 1,
+            priority = 0,
             relatedToSubject = "",
-            isComplete = true)
+            isComplete = true,
+            taskSubjectId = 0,
+            taskId = 1)
     )
     Scaffold(
         topBar = { DashboardScreenTopBar() }
@@ -128,7 +138,9 @@ fun DashBoardScreen(){
                 sectionTitle = "UPCOMING TASKS",
                 emptyListText = "You don't have any upcoming tasks.\n" +
                         "Click the + button in subject screen to add new task.",
-                tasks =tasks
+                tasks =tasks,
+                onCheckBoxClick = {},
+                onTaskCardClick = {}
             )
 
 
