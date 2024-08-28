@@ -3,6 +3,7 @@ package com.example.studysmartapp.presentation.dashboard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -32,9 +34,17 @@ import androidx.navigation.NavHost
 import com.example.studysmartapp.R
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.presentation.components.CountCard
+import com.example.studysmartapp.presentation.components.SubjectCard
 
 @Composable
 fun DashBoardScreen(){
+    val subjects= listOf(
+        Subject("English", goalHours = 10f, colors = Subject.subjectsCardColors[0]),
+        Subject("Maths", goalHours = 10f, colors = Subject.subjectsCardColors[1]),
+        Subject("physics", goalHours = 10f, colors = Subject.subjectsCardColors[2]),
+        Subject("Geology", goalHours = 10f, colors = Subject.subjectsCardColors[3]),
+        Subject("Fine Arts", goalHours = 10f, colors = Subject.subjectsCardColors[4]),
+    )
     Scaffold(
         topBar = { DashboardScreenTopBar() }
     ) {paddingValues ->
@@ -56,7 +66,7 @@ fun DashBoardScreen(){
             item {
                 SubjectsCardsSection(
                     modifier = Modifier.fillMaxWidth(),
-                    subjectList = emptyList() )
+                    subjectList =subjects )
             }
 
 
@@ -140,6 +150,18 @@ private fun SubjectsCardsSection(
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 textAlign = TextAlign.Center)
+        }
+        LazyRow(
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(start = 12.dp, end = 12.dp)
+        ) {
+            items(subjectList) {subject->
+                SubjectCard(
+                    subjectName = subject.name,
+                    gradientColor = subject.colors,
+                    onClick = {})
+            }
+
         }
 
 

@@ -13,7 +13,7 @@ data class Subject(
     val colors:List<Color>
 ){
     companion object{
-        val subjectsCardColors= listOf(gradient1, gradient2, gradient3, gradient4, gradient4,
+        val subjectsCardColors= listOf(gradient1, gradient2, gradient3, gradient4,
             gradient5)
     }
 }
