@@ -1,6 +1,7 @@
 package com.example.studysmartapp.presentation.dashboard
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,7 +18,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,12 +33,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHost
 import com.example.studysmartapp.R
 import com.example.studysmartapp.domain.model.Subject
+import com.example.studysmartapp.domain.model.Task
 import com.example.studysmartapp.presentation.components.CountCard
 import com.example.studysmartapp.presentation.components.SubjectCard
+import com.example.studysmartapp.presentation.components.TaskCheckBox
+import com.example.studysmartapp.presentation.components.tasksList
 
 @Composable
 fun DashBoardScreen(){
@@ -44,6 +53,43 @@ fun DashBoardScreen(){
         Subject("physics", goalHours = 10f, colors = Subject.subjectsCardColors[2]),
         Subject("Geology", goalHours = 10f, colors = Subject.subjectsCardColors[3]),
         Subject("Fine Arts", goalHours = 10f, colors = Subject.subjectsCardColors[4]),
+    )
+    val tasks= listOf(
+        Task(
+            title="Prepare notes",
+            description = "",
+            dueDate = 0L,
+            priority = 1,
+            relatedToSubject = "",
+            isComplete = false),
+        Task(
+            title="Do Homework",
+            description = "",
+            dueDate = 0L,
+            priority = 1,
+            relatedToSubject = "",
+            isComplete = true),
+        Task(
+            title="Go Coaching",
+            description = "",
+            dueDate = 0L,
+            priority = 1,
+            relatedToSubject = "",
+            isComplete = false),
+        Task(
+            title="Assignment",
+            description = "",
+            dueDate = 0L,
+            priority = 1,
+            relatedToSubject = "",
+            isComplete = false),
+        Task(
+            title="Write Poem",
+            description = "",
+            dueDate = 0L,
+            priority = 1,
+            relatedToSubject = "",
+            isComplete = true)
     )
     Scaffold(
         topBar = { DashboardScreenTopBar() }
@@ -68,6 +114,22 @@ fun DashBoardScreen(){
                     modifier = Modifier.fillMaxWidth(),
                     subjectList =subjects )
             }
+            item { 
+                Button(onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp, vertical = 20.dp)
+                ) {
+                    Text(text = "Start Study Session")
+                    
+                }
+            }
+            tasksList(
+                sectionTitle = "UPCOMING TASKS",
+                emptyListText = "You don't have any upcoming tasks.\n" +
+                        "Click the + button in subject screen to add new task.",
+                tasks =tasks
+            )
 
 
         }
@@ -167,3 +229,4 @@ private fun SubjectsCardsSection(
 
     }
 }
+
