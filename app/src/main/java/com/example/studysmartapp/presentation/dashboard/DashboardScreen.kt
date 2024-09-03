@@ -150,7 +150,8 @@ fun DashBoardScreen(){
                 sectionTitle = "RECENT STUDY SESSIONS",
                 emptyListText = "You don't have any upcoming tasks. \n" +
                         "Click the + button in subject screen to add new task.",
-                sessions = emptyList()
+                sessions = emptyList(),
+                onDeleteClick = {}
             )
 
 

@@ -12,7 +12,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,19 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.studysmartapp.R
 import com.example.studysmartapp.domain.model.Session
-import com.example.studysmartapp.domain.model.Task
-import com.example.studysmartapp.util.Priority
 
 
 fun LazyListScope.studySessionsList(
     sectionTitle:String,
     emptyListText:String,
-    sessions:List<Session>
+    sessions:List<Session>,
+    onDeleteClick:(Session)->Unit
 ){
     item {
         Text(text = sectionTitle,
@@ -50,7 +53,7 @@ fun LazyListScope.studySessionsList(
                 Image(
                     modifier = Modifier
                         .size(120.dp),
-                    painter = painterResource(id = R.drawable.img_books),
+                    painter = painterResource(id = R.drawable.img_lamp),
                     contentDescription = emptyListText
                 )
                 Spacer(modifier = Modifier.height(12.dp))
@@ -65,45 +68,48 @@ fun LazyListScope.studySessionsList(
 
     }
     items(sessions){session->
-
+        StudySessionCard(
+            modifier = Modifier
+                .padding(horizontal = 10.dp, vertical = 3.dp),
+            session = session,
+            onClick = {},
+            onDeleteClick = {onDeleteClick(session)})
     }
 }
 
 @Composable
-fun TaskCard2(
+fun StudySessionCard(
     modifier: Modifier = Modifier,
-    task: Task,
-    onCheckBoxClick:()->Unit,
-    onClick:()->Unit
+    session: Session,
+    onClick:()->Unit,
+    onDeleteClick: () -> Unit
 ){
-    ElevatedCard(modifier=modifier.clickable {onClick()  }) {
-        Row(modifier= Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+    Card (modifier=modifier.clickable { onClick() }){
+        Row (
+            modifier= Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
-        ) {
-            TaskCheckBox(
-                isComplete = task.isComplete,
-                borderColor = Priority.fromInt(task.priority).color,
-                onCheckBoxClick = onCheckBoxClick
-            )
-            Spacer(modifier = Modifier.width(10.dp))
-            Column {
-                Text(text = task.title,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
+        ){
+            Column(modifier=Modifier.padding(horizontal = 5.dp, vertical = 5.dp)) {
+                Text(
+                    text = session.relatedToSubject,
                     style = MaterialTheme.typography.titleMedium,
-                    textDecoration =
-                    if(task.isComplete) {
-                        TextDecoration.LineThrough}
-                    else{
-                        TextDecoration.None}
-                )
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text ="${task.dueDate}",
+                Text(
+                    text ="${session.date}",
                     style = MaterialTheme.typography.bodySmall)
             }
-
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = "${session.duration} hr",
+                style = MaterialTheme.typography.titleMedium)
+            IconButton(
+                onClick = onDeleteClick){
+                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Session")
+            }
         }
     }
 }
