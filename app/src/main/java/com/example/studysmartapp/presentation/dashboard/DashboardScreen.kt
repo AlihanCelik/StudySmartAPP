@@ -29,6 +29,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +48,7 @@ import com.example.studysmartapp.R
 import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.domain.model.Task
+import com.example.studysmartapp.presentation.components.AddSubjectDialog
 import com.example.studysmartapp.presentation.components.CountCard
 import com.example.studysmartapp.presentation.components.SubjectCard
 import com.example.studysmartapp.presentation.components.TaskCheckBox
@@ -136,6 +142,15 @@ fun DashBoardScreen(){
             sessionId = 0
         )
     )
+    var isAddSubjectDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+    AddSubjectDialog(
+        isOpen = isAddSubjectDialog,
+        onDismissRequest = { isAddSubjectDialog=false },
+        onConfirmButtonClick = {
+            isAddSubjectDialog=true
+        })
     Scaffold(
         topBar = { DashboardScreenTopBar() }
     ) {paddingValues ->
@@ -157,7 +172,8 @@ fun DashBoardScreen(){
             item {
                 SubjectsCardsSection(
                     modifier = Modifier.fillMaxWidth(),
-                    subjectList =subjects )
+                    subjectList =subjects,
+                    onAddClicked = {isAddSubjectDialog=true})
             }
             item { 
                 Button(onClick = { /*TODO*/ },
@@ -235,7 +251,8 @@ private fun SubjectsCardsSection(
     modifier: Modifier,
     subjectList:List<Subject>,
     emptyListText:String="You don't have any subjects.\n" +
-            "Click the + button to add new subject."
+            "Click the + button to add new subject.",
+    onAddClicked: ()->Unit
 ){
     Column(modifier=modifier) {
         Row (
@@ -246,7 +263,7 @@ private fun SubjectsCardsSection(
             Text(text = "Subjects", style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 12.dp)
             )
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = {onAddClicked()}) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Subjects")
 
             }
