@@ -1,5 +1,6 @@
 package com.example.studysmartapp.presentation.dashboard
 
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHost
 import com.example.studysmartapp.R
@@ -43,7 +45,9 @@ import com.example.studysmartapp.domain.model.Task
 import com.example.studysmartapp.presentation.components.CountCard
 import com.example.studysmartapp.presentation.components.SubjectCard
 import com.example.studysmartapp.presentation.components.TaskCheckBox
+import com.example.studysmartapp.presentation.components.studySessionsList
 import com.example.studysmartapp.presentation.components.tasksList
+import com.example.studysmartapp.ui.theme.StudySmartAPPTheme
 
 @Composable
 fun DashBoardScreen(){
@@ -142,6 +146,12 @@ fun DashBoardScreen(){
                 onCheckBoxClick = {},
                 onTaskCardClick = {}
             )
+            studySessionsList(
+                sectionTitle = "RECENT STUDY SESSIONS",
+                emptyListText = "You don't have any upcoming tasks. \n" +
+                        "Click the + button in subject screen to add new task.",
+                sessions = emptyList()
+            )
 
 
         }
@@ -209,7 +219,6 @@ private fun SubjectsCardsSection(
 
             }
 
-
         }
         if(subjectList.isEmpty()){
             Image(
@@ -239,6 +248,15 @@ private fun SubjectsCardsSection(
         }
 
 
+    }
+}
+
+@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun DashboardPreview(){
+    StudySmartAPPTheme{
+        DashBoardScreen()
     }
 }
 
