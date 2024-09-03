@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHost
 import com.example.studysmartapp.R
+import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.domain.model.Task
 import com.example.studysmartapp.presentation.components.CountCard
@@ -105,6 +106,36 @@ fun DashBoardScreen(){
             taskSubjectId = 0,
             taskId = 1)
     )
+    val sessions= listOf(
+        Session(
+            relatedToSubject = "English",
+            date = 0L,
+            duration = 2,
+            sessionSubjctId = 0,
+            sessionId = 0
+        ),
+        Session(
+            relatedToSubject = "Maths",
+            date = 0L,
+            duration = 2,
+            sessionSubjctId = 0,
+            sessionId = 0
+        ),
+        Session(
+            relatedToSubject = "physics",
+            date = 0L,
+            duration = 2,
+            sessionSubjctId = 0,
+            sessionId = 0
+        ),
+        Session(
+            relatedToSubject = "Chemistry",
+            date = 0L,
+            duration = 2,
+            sessionSubjctId = 0,
+            sessionId = 0
+        )
+    )
     Scaffold(
         topBar = { DashboardScreenTopBar() }
     ) {paddingValues ->
@@ -150,7 +181,7 @@ fun DashBoardScreen(){
                 sectionTitle = "RECENT STUDY SESSIONS",
                 emptyListText = "You don't have any upcoming tasks. \n" +
                         "Click the + button in subject screen to add new task.",
-                sessions = emptyList(),
+                sessions = sessions,
                 onDeleteClick = {}
             )
 

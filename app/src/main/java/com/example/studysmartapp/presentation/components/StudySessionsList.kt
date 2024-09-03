@@ -91,7 +91,7 @@ fun StudySessionCard(
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
-            Column(modifier=Modifier.padding(horizontal = 5.dp, vertical = 5.dp)) {
+            Column(modifier=Modifier.padding(horizontal = 7.dp)) {
                 Text(
                     text = session.relatedToSubject,
                     style = MaterialTheme.typography.titleMedium,
