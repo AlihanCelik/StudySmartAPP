@@ -41,9 +41,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.model.Subject
-import com.example.studysmartapp.domain.model.Task
 import com.example.studysmartapp.presentation.components.AddSubjectDialog
 import com.example.studysmartapp.presentation.components.CountCard
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
