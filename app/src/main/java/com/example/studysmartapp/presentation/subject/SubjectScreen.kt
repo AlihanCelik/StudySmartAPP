@@ -31,7 +31,10 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
@@ -41,7 +44,9 @@ import androidx.compose.ui.unit.dp
 import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.domain.model.Task
+import com.example.studysmartapp.presentation.components.AddSubjectDialog
 import com.example.studysmartapp.presentation.components.CountCard
+import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.studySessionsList
 import com.example.studysmartapp.presentation.components.tasksList
 
@@ -139,13 +144,61 @@ fun SubjectScreen(
             sessionId = 0
         )
     )
+
+    var isEditSubjectDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var isDeleteSubjectDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var isDeleteSessionDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
+    var subjectName by rememberSaveable {
+        mutableStateOf("")
+    }
+    var goalHours by rememberSaveable {
+        mutableStateOf("")
+    }
+    var selectedColor by rememberSaveable {
+        mutableStateOf(Subject.subjectsCardColors.random())
+    }
+    AddSubjectDialog(
+        isOpen = isEditSubjectDialog,
+        goalHours=goalHours,
+        subjectName = subjectName,
+        selectedColors = selectedColor,
+        onSubjectNameChange = {subjectName=it},
+        onGoalHoursChange = {goalHours=it},
+        onColorChange = {selectedColor=it},
+        onDismissRequest = { isEditSubjectDialog=false },
+        onConfirmButtonClick = {
+            isEditSubjectDialog=true
+        })
+    DeleteDiaLog(
+        isOpen = isDeleteSubjectDialog,
+        title = "Delete Session1",
+        onBodyText = "Are you sure, you want to delete this subject? All related" +
+                "tasks and study sessions will be permanently removed.This action can not be undone",
+        onDismissRequest = {isDeleteSubjectDialog=false},
+        onConfirmButtonClick = {isDeleteSubjectDialog=false}
+    )
+    DeleteDiaLog(
+        isOpen = isDeleteSessionDialog,
+        title = "Delete Session1",
+        onBodyText = "Are you sure, you want to delete this subject? All related" +
+                "tasks and study sessions will be permanently removed.This action can not be undone",
+        onDismissRequest = {isDeleteSessionDialog=false},
+        onConfirmButtonClick = {isDeleteSessionDialog=false}
+    )
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { SubjectScreenTopBar(
             title = "Engilsh",
             onBackButton = {},
-            onDeleteButton = {},
-            onEditButtonClick = {},
+            onDeleteButton = {isDeleteSubjectDialog=true},
+            onEditButtonClick = {isEditSubjectDialog=true},
             scrollBehavior=scrollBehavior
         )},
         floatingActionButton = {
@@ -197,7 +250,7 @@ fun SubjectScreen(
                 emptyListText = "You don't have any upcoming tasks. \n" +
                         "Click the + button in subject screen to add new task.",
                 sessions = sessions,
-                onDeleteClick = {}
+                onDeleteClick = {isDeleteSessionDialog=true}
             )
 
         }
