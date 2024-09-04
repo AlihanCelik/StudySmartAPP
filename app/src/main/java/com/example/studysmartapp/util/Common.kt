@@ -6,7 +6,7 @@ import com.example.studysmartapp.ui.theme.Red
 
 
 enum class Priority(val title:String, val color : Color,val value: Int){
-    LOW(title = "Low", color = Color.Green, value = 0),
+    LOW(title = "Low", color = com.example.studysmartapp.ui.theme.Green, value = 0),
     MEDIUM(title = "Medium", color = Orange, value = 1),
     HIGH(title = "High", color = Red, value = 2);
 

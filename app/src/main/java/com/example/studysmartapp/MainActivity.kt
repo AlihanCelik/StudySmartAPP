@@ -16,6 +16,7 @@ import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.domain.model.Task
 import com.example.studysmartapp.presentation.dashboard.DashBoardScreen
 import com.example.studysmartapp.presentation.subject.SubjectScreen
+import com.example.studysmartapp.presentation.task.TaskScreen
 import com.example.studysmartapp.ui.theme.StudySmartAPPTheme
 
 class MainActivity : ComponentActivity() {
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             StudySmartAPPTheme {
-                SubjectScreen()
+                TaskScreen()
             }
         }
     }
