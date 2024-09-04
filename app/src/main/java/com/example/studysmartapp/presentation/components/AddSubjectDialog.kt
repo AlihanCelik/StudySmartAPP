@@ -3,6 +3,7 @@ package com.example.studysmartapp.presentation.components
 import android.app.AlertDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
@@ -41,6 +46,27 @@ fun AddSubjectDialog(
     onGoalHoursChange:(String)->Unit
 
 ) {
+    var subjectNameError by rememberSaveable {
+        mutableStateOf<String?>(null)
+    }
+    subjectNameError=when{
+        subjectName.isBlank()->"Please enter subject name."
+        subjectName.length<2 ->"Subject name is too short"
+        subjectName.length > 20 ->"Subject name is too long"
+        else->null
+    }
+
+    var goalHoursError by rememberSaveable {
+        mutableStateOf<String?>(null)
+    }
+    goalHoursError=when{
+        goalHours.isBlank()->"Please enter goal study hours."
+        goalHours.toFloatOrNull() == null ->"Invalid number."
+        goalHours.toFloat() < 1f ->"Please set at least 1 hour."
+        goalHours.toFloat() > 100 ->"Please set a maximum of 100 hours."
+        else->null
+    }
+
     if(isOpen){
         AlertDialog(
             onDismissRequest = onDismissRequest,
@@ -64,33 +90,42 @@ fun AddSubjectDialog(
                                         else Color.Transparent,
                                         shape = CircleShape
                                     )
+                                    .clickable { onColorChange(colors) }
                                     .background(brush = Brush.verticalGradient(colors))
                             )
-                            OutlinedTextField(
-                                value = subjectName,
-                                onValueChange = onSubjectNameChange,
-                                label = {
-                                    Text(text = "Subject Name")
-                                },
-                                singleLine = true
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-                            OutlinedTextField(
-                                value = goalHours,
-                                onValueChange = onGoalHoursChange,
-                                label = {
-                                    Text(text = "Goal Study Hours")
-                                },
-                                singleLine = true,
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                            )
                         }
-
                     }
+                    OutlinedTextField(
+                            value = subjectName,
+                    onValueChange = onSubjectNameChange,
+                    label = {
+                        Text(text = "Subject Name")
+                    },
+                    singleLine = true,
+                        isError = subjectNameError!=null && subjectName.isNotBlank(),
+                        supportingText = {
+                            Text(text = subjectNameError.orEmpty())
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    OutlinedTextField(
+                        value = goalHours,
+                        onValueChange = onGoalHoursChange,
+                        label = {
+                            Text(text = "Goal Study Hours")
+                        },
+                        singleLine = true,
+                        isError = goalHoursError!=null && goalHours.isNotBlank(),
+                        supportingText = {
+                            Text(text = goalHoursError.orEmpty())
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
                 }
             },
             confirmButton = {
-                TextButton(onClick = onConfirmButtonClick) {
+                TextButton(onClick = onConfirmButtonClick,
+                    enabled = subjectNameError==null && goalHoursError==null) {
                     Text(text = "Save")
                 }
             },

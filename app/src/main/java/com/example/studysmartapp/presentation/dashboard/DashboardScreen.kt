@@ -50,6 +50,7 @@ import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.domain.model.Task
 import com.example.studysmartapp.presentation.components.AddSubjectDialog
 import com.example.studysmartapp.presentation.components.CountCard
+import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.SubjectCard
 import com.example.studysmartapp.presentation.components.TaskCheckBox
 import com.example.studysmartapp.presentation.components.studySessionsList
@@ -145,6 +146,9 @@ fun DashBoardScreen(){
     var isAddSubjectDialog by rememberSaveable {
         mutableStateOf(false)
     }
+    var isDeleteDialog by rememberSaveable {
+        mutableStateOf(false)
+    }
     var subjectName by rememberSaveable {
         mutableStateOf("")
     }
@@ -166,6 +170,14 @@ fun DashBoardScreen(){
         onConfirmButtonClick = {
             isAddSubjectDialog=true
         })
+    DeleteDiaLog(
+        isOpen = isDeleteDialog,
+        title = "Delete Session1",
+        onBodyText = "Are you sure, you want to dlete this session? Your studied hours will be reduced" +
+                "by this session time. This action can not be unde",
+        onDismissRequest = {isDeleteDialog=false},
+        onConfirmButtonClick = {isDeleteDialog=false}
+    )
     Scaffold(
         topBar = { DashboardScreenTopBar() }
     ) {paddingValues ->
@@ -213,7 +225,7 @@ fun DashBoardScreen(){
                 emptyListText = "You don't have any upcoming tasks. \n" +
                         "Click the + button in subject screen to add new task.",
                 sessions = sessions,
-                onDeleteClick = {}
+                onDeleteClick = {isDeleteDialog=true}
             )
 
 
