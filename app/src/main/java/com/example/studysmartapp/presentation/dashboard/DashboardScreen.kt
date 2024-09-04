@@ -59,6 +59,7 @@ import com.example.studysmartapp.ui.theme.StudySmartAPPTheme
 
 @Composable
 fun DashBoardScreen(){
+
     val subjects= listOf(
         Subject("English", goalHours = 10f, colors = Subject.subjectsCardColors[0], subjectId = 0),
         Subject("Maths", goalHours = 10f, colors = Subject.subjectsCardColors[1], subjectId = 0),
@@ -143,6 +144,7 @@ fun DashBoardScreen(){
             sessionId = 0
         )
     )
+
     var isAddSubjectDialog by rememberSaveable {
         mutableStateOf(false)
     }

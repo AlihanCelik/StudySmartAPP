@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.studysmartapp.presentation.dashboard.DashBoardScreen
+import com.example.studysmartapp.presentation.subject.SubjectScreen
 import com.example.studysmartapp.ui.theme.StudySmartAPPTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +21,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             StudySmartAPPTheme {
-                DashBoardScreen()
+                SubjectScreen()
             }
         }
     }
