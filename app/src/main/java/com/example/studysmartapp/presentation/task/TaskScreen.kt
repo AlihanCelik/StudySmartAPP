@@ -82,7 +82,7 @@ fun TaskScreen() {
                 isComplete = false,
                 checkBoxBorderColor = Red ,
                 onBackButtonClick = {  },
-                onDeleteButtonClick = {isDeleteDialogOpen=true }) {
+                onDeleteButtonClick = { isDeleteDialogOpen=true }) {
                 
             }
 
@@ -213,7 +213,7 @@ private fun TaskScreenTopBar(
                     borderColor = checkBoxBorderColor,
                     onCheckBoxClick = onCheckBoxClick
                 )
-                IconButton(onClick = onBackButtonClick) {
+                IconButton(onClick = onDeleteButtonClick) {
                     Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete Task")
 
                 }
