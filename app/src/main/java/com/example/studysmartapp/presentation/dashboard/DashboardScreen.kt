@@ -44,6 +44,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHost
+import androidx.room.RoomOpenHelper
 import com.example.studysmartapp.R
 import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.model.Subject
@@ -55,13 +56,49 @@ import com.example.studysmartapp.presentation.components.SubjectCard
 import com.example.studysmartapp.presentation.components.TaskCheckBox
 import com.example.studysmartapp.presentation.components.studySessionsList
 import com.example.studysmartapp.presentation.components.tasksList
+import com.example.studysmartapp.presentation.destinations.SessionScreenRouteDestination
+import com.example.studysmartapp.presentation.destinations.SubjectScreenRouteDestination
+import com.example.studysmartapp.presentation.destinations.TaskScreenRouteDestination
+import com.example.studysmartapp.presentation.subject.SubjectScreenNavArgs
+import com.example.studysmartapp.presentation.task.TaskScreenNavArgs
 import com.example.studysmartapp.sessions
 import com.example.studysmartapp.subjects
 import com.example.studysmartapp.tasks
 import com.example.studysmartapp.ui.theme.StudySmartAPPTheme
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
+
+@Destination(start = true)
+@Composable
+fun DashboardScreenRoute(
+    navigator:DestinationsNavigator
+){
+    DashBoardScreen(
+        onSubjectCardClick ={subjectId->
+            subjectId?.let {
+                val navArg=SubjectScreenNavArgs(subjectId=subjectId)
+                navigator.navigate(SubjectScreenRouteDestination(navArgs = navArg))
+            }
+        } ,
+        onTaskCardClick = {taskId->
+            val navArg=TaskScreenNavArgs(taskId=taskId, subjectId = null)
+            navigator.navigate(TaskScreenRouteDestination(navArgs = navArg))
+
+        },
+        onStartSessionButtonClick = {
+            navigator.navigate(SessionScreenRouteDestination())
+        }
+        )
+}
 
 @Composable
-fun DashBoardScreen(){
+private fun DashBoardScreen(
+    onSubjectCardClick:(Int?)->Unit,
+    onTaskCardClick:(Int?)->Unit,
+    onStartSessionButtonClick:()->Unit
+
+){
 
     var isAddSubjectDialog by rememberSaveable {
         mutableStateOf(false)
@@ -120,10 +157,11 @@ fun DashBoardScreen(){
                 SubjectsCardsSection(
                     modifier = Modifier.fillMaxWidth(),
                     subjectList =subjects,
-                    onAddClicked = {isAddSubjectDialog=true})
+                    onAddClicked = {isAddSubjectDialog=true},
+                    onSubjectCardClick = onSubjectCardClick)
             }
             item { 
-                Button(onClick = { /*TODO*/ },
+                Button(onClick = onStartSessionButtonClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp, vertical = 20.dp)
@@ -138,7 +176,7 @@ fun DashBoardScreen(){
                         "Click the + button in subject screen to add new task.",
                 tasks =tasks,
                 onCheckBoxClick = {},
-                onTaskCardClick = {}
+                onTaskCardClick = onTaskCardClick
             )
             studySessionsList(
                 sectionTitle = "RECENT STUDY SESSIONS",
@@ -199,7 +237,8 @@ private fun SubjectsCardsSection(
     subjectList:List<Subject>,
     emptyListText:String="You don't have any subjects.\n" +
             "Click the + button to add new subject.",
-    onAddClicked: ()->Unit
+    onAddClicked: ()->Unit,
+    onSubjectCardClick:(Int?)->Unit
 ){
     Column(modifier=modifier) {
         Row (
@@ -238,7 +277,7 @@ private fun SubjectsCardsSection(
                 SubjectCard(
                     subjectName = subject.name,
                     gradientColor = subject.colors,
-                    onClick = {})
+                    onClick = {onSubjectCardClick(subject.subjectId)})
             }
 
         }
@@ -247,12 +286,4 @@ private fun SubjectsCardsSection(
     }
 }
 
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun DashboardPreview(){
-    StudySmartAPPTheme{
-        DashBoardScreen()
-    }
-}
 

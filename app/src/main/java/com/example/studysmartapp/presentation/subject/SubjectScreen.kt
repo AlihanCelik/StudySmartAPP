@@ -49,6 +49,17 @@ import com.example.studysmartapp.presentation.components.studySessionsList
 import com.example.studysmartapp.presentation.components.tasksList
 import com.example.studysmartapp.sessions
 import com.example.studysmartapp.tasks
+import com.ramcosta.composedestinations.annotation.Destination
+
+data class SubjectScreenNavArgs(
+    val subjectId: Int
+)
+
+@Destination(navArgsDelegate = SubjectScreenNavArgs::class)
+@Composable
+fun SubjectScreenRoute(){
+    SubjectScreen()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

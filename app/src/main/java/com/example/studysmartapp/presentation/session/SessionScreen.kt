@@ -35,13 +35,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.SubjectListBottomSheet
 import com.example.studysmartapp.presentation.components.studySessionsList
 import com.example.studysmartapp.sessions
 import com.example.studysmartapp.subjects
+import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.launch
+
+@Destination
+@Composable
+fun SessionScreenRoute(){
+    SessionScreen()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,7 +105,9 @@ fun SessionScreen(){
             }
             item{
                 ButtonsSection(
-                    modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .fillMaxWidth(),
                     startButtonClick = {},
                     cancelButtonClick = {},
                     finishButtonClick = {})

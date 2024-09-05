@@ -11,14 +11,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph
 import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.domain.model.Task
-import com.example.studysmartapp.presentation.dashboard.DashBoardScreen
-import com.example.studysmartapp.presentation.session.SessionScreen
-import com.example.studysmartapp.presentation.subject.SubjectScreen
-import com.example.studysmartapp.presentation.task.TaskScreen
+import com.example.studysmartapp.presentation.NavGraphs
 import com.example.studysmartapp.ui.theme.StudySmartAPPTheme
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.spec.NavGraphSpec
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             StudySmartAPPTheme {
-                SessionScreen()
+                DestinationsNavHost(navGraph = NavGraphs.root)
             }
         }
     }

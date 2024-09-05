@@ -30,7 +30,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,7 +42,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.SubjectListBottomSheet
 import com.example.studysmartapp.presentation.components.TaskCheckBox
@@ -52,8 +50,20 @@ import com.example.studysmartapp.subjects
 import com.example.studysmartapp.ui.theme.Red
 import com.example.studysmartapp.util.Priority
 import com.example.studysmartapp.util.changeMillsToDateString
+import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.launch
 import java.time.Instant
+
+data class TaskScreenNavArgs(
+    val taskId:Int?,
+    val subjectId:Int?
+)
+
+@Destination(navArgsDelegate = TaskScreenNavArgs::class)
+@Composable
+fun TaskScreenRoute(){
+    TaskScreen()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
