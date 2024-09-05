@@ -47,9 +47,12 @@ import com.example.studysmartapp.presentation.components.CountCard
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.studySessionsList
 import com.example.studysmartapp.presentation.components.tasksList
+import com.example.studysmartapp.presentation.destinations.TaskScreenRouteDestination
+import com.example.studysmartapp.presentation.task.TaskScreenNavArgs
 import com.example.studysmartapp.sessions
 import com.example.studysmartapp.tasks
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 data class SubjectScreenNavArgs(
     val subjectId: Int
@@ -57,13 +60,27 @@ data class SubjectScreenNavArgs(
 
 @Destination(navArgsDelegate = SubjectScreenNavArgs::class)
 @Composable
-fun SubjectScreenRoute(){
-    SubjectScreen()
+fun SubjectScreenRoute(
+    navigator: DestinationsNavigator
+){
+    SubjectScreen(onBackButtonClick = { navigator.navigateUp()},
+        onAddTaskButtonClick = {
+            val navArg= TaskScreenNavArgs(taskId=null, subjectId = -1)
+            navigator.navigate(TaskScreenRouteDestination(navArgs = navArg))
+        },
+        onTaskCardClick = {taskId->
+            val navArg=TaskScreenNavArgs(taskId=taskId, subjectId = null)
+            navigator.navigate(TaskScreenRouteDestination(navArgs = navArg))
+
+        })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectScreen(
+    onBackButtonClick: () -> Unit,
+    onAddTaskButtonClick:()->Unit,
+    onTaskCardClick:(Int?)->Unit
 ){
     val scrollBehavior=TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val listState= rememberLazyListState()
@@ -124,14 +141,14 @@ fun SubjectScreen(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { SubjectScreenTopBar(
             title = "Engilsh",
-            onBackButton = {},
+            onBackButton = onBackButtonClick,
             onDeleteButton = {isDeleteSubjectDialog=true},
             onEditButtonClick = {isEditSubjectDialog=true},
             scrollBehavior=scrollBehavior
         )},
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { /*TODO*/ },
+                onClick = onAddTaskButtonClick,
                 icon = { Icon(imageVector = Icons.Default.Add, contentDescription = "Add")},
                 text = { Text(text = "Add Task")},
                 expanded = isFabExpanded
@@ -157,7 +174,7 @@ fun SubjectScreen(
                         "Click the + button in subject screen to add new task.",
                 tasks =tasks,
                 onCheckBoxClick = {},
-                onTaskCardClick = {}
+                onTaskCardClick = onTaskCardClick
             )
             item {
                 Spacer(modifier = Modifier.height(20.dp))
@@ -168,7 +185,7 @@ fun SubjectScreen(
                         "Click the + button in subject screen to add new task.",
                 tasks =tasks,
                 onCheckBoxClick = {},
-                onTaskCardClick = {}
+                onTaskCardClick = onTaskCardClick
             )
             item {
                 Spacer(modifier = Modifier.height(20.dp))

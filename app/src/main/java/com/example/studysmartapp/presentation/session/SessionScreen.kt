@@ -35,23 +35,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.SubjectListBottomSheet
 import com.example.studysmartapp.presentation.components.studySessionsList
 import com.example.studysmartapp.sessions
 import com.example.studysmartapp.subjects
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 
 @Destination
 @Composable
-fun SessionScreenRoute(){
-    SessionScreen()
+fun SessionScreenRoute(
+    navigator: DestinationsNavigator
+){
+    SessionScreen(onBackButtonClicked = {navigator.navigateUp()})
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SessionScreen(){
+private fun SessionScreen(
+    onBackButtonClicked: () -> Unit
+){
     val sheetState= rememberModalBottomSheetState()
     var isSubjectListBottomSheet by remember {
         mutableStateOf(false)
@@ -82,7 +89,7 @@ fun SessionScreen(){
         onDismissReguest = {isSubjectListBottomSheet=false})
 
     Scaffold (
-        topBar = {SessionScreenTopBar(onBackButtonClicked = {})}
+        topBar = {SessionScreenTopBar(onBackButtonClicked = onBackButtonClicked)}
     ){paddingValues ->
         LazyColumn(
             modifier = Modifier

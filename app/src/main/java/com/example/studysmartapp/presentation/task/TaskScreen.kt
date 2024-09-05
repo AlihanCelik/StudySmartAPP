@@ -51,6 +51,7 @@ import com.example.studysmartapp.ui.theme.Red
 import com.example.studysmartapp.util.Priority
 import com.example.studysmartapp.util.changeMillsToDateString
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import java.time.Instant
 
@@ -61,13 +62,17 @@ data class TaskScreenNavArgs(
 
 @Destination(navArgsDelegate = TaskScreenNavArgs::class)
 @Composable
-fun TaskScreenRoute(){
-    TaskScreen()
+fun TaskScreenRoute(
+    navigator: DestinationsNavigator
+){
+    TaskScreen(onBackButtonClick = {navigator.navigateUp()})
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskScreen() {
+fun TaskScreen(
+    onBackButtonClick: () -> Unit
+) {
     var title by remember {
         mutableStateOf("")
     }
@@ -132,7 +137,7 @@ fun TaskScreen() {
                 isTaskExist = true,
                 isComplete = false,
                 checkBoxBorderColor = Red ,
-                onBackButtonClick = {  },
+                onBackButtonClick =onBackButtonClick,
                 onDeleteButtonClick = { isDeleteDialogOpen=true }) {
                 
             }
