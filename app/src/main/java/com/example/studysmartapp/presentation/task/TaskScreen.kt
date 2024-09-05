@@ -31,21 +31,29 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDateRangePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
+import com.example.studysmartapp.presentation.components.SubjectListBottomSheet
 import com.example.studysmartapp.presentation.components.TaskCheckBox
 import com.example.studysmartapp.presentation.components.TaskDatePicker
+import com.example.studysmartapp.subjects
 import com.example.studysmartapp.ui.theme.Red
 import com.example.studysmartapp.util.Priority
+import com.example.studysmartapp.util.changeMillsToDateString
+import kotlinx.coroutines.launch
+import java.time.Instant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,7 +70,24 @@ fun TaskScreen() {
     var isDatePickerDialogOpen by rememberSaveable {
         mutableStateOf(false)
     }
-    val datePickerState= rememberDatePickerState()
+    val datePickerState= rememberDatePickerState(
+        initialSelectedDateMillis = Instant.now().toEpochMilli()
+    )
+    val sheetState= rememberModalBottomSheetState()
+    var isSubjectListBottomSheet by remember {
+        mutableStateOf(false)
+    }
+    val scope= rememberCoroutineScope()
+    SubjectListBottomSheet(
+        isOpen = isSubjectListBottomSheet,
+        sheetState = sheetState,
+        subject = subjects,
+        onSubjectClicked ={
+            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                if(!sheetState.isVisible) isSubjectListBottomSheet=false
+            }
+        },
+        onDismissReguest = {isSubjectListBottomSheet=false})
 
     TaskDatePicker(
         state = datePickerState,
@@ -136,7 +161,7 @@ fun TaskScreen() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){
-                Text(text = "30 October, 2024",
+                Text(text = datePickerState.selectedDateMillis.changeMillsToDateString(),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 IconButton(onClick = {isDatePickerDialogOpen=true}) {
@@ -181,7 +206,7 @@ fun TaskScreen() {
                 Text(text = "English",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { isSubjectListBottomSheet=true}) {
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
                         contentDescription = "Select Subject")
