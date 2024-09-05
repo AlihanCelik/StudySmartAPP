@@ -29,6 +29,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,9 +43,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.TaskCheckBox
+import com.example.studysmartapp.presentation.components.TaskDatePicker
 import com.example.studysmartapp.ui.theme.Red
 import com.example.studysmartapp.util.Priority
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen() {
     var title by remember {
@@ -55,6 +59,18 @@ fun TaskScreen() {
     var isDeleteDialogOpen by rememberSaveable {
         mutableStateOf(false)
     }
+    var isDatePickerDialogOpen by rememberSaveable {
+        mutableStateOf(false)
+    }
+    val datePickerState= rememberDatePickerState()
+
+    TaskDatePicker(
+        state = datePickerState,
+        isOpen = isDatePickerDialogOpen,
+        onDismissRequest = {isDatePickerDialogOpen=false},
+        onConfirmButtonClicked = {isDatePickerDialogOpen=false}
+        )
+
     DeleteDiaLog(
         isOpen = isDeleteDialogOpen,
         title = "Delete Task?",
@@ -123,7 +139,7 @@ fun TaskScreen() {
                 Text(text = "30 October, 2024",
                     style = MaterialTheme.typography.bodyLarge
                 )
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {isDatePickerDialogOpen=true}) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
                         contentDescription = "Select Due Date")
