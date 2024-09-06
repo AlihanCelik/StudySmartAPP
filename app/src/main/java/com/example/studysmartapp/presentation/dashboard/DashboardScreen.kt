@@ -134,7 +134,7 @@ private fun DashBoardScreen(
                 "by this session time. This action can not be unde",
         onDismissRequest = {isDeleteDialog=false},
         onConfirmButtonClick = {
-            onEvent(DashboardEvent.DeleteSubject)
+            onEvent(DashboardEvent.DeleteSession)
             isDeleteDialog=false}
     )
     Scaffold(

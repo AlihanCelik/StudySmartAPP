@@ -4,6 +4,7 @@ import com.example.studysmartapp.data.local.SessionDao
 import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.repository.SessionRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.take
 import javax.inject.Inject
 
 class SessionRepositoryImpl @Inject constructor(
@@ -21,19 +22,21 @@ class SessionRepositoryImpl @Inject constructor(
         return sessionDao.getAllSessions()
     }
 
-    override fun getRecentSessionsForSubject(subjectId: Int): Flow<List<Session>> {
-       return sessionDao.getRecentSessionsForSubject(subjectId)
+    override fun getRecentTenSessionsForSubject(subjectId: Int): Flow<List<Session>> {
+        return sessionDao.getAllSessions().take(count = 10)
     }
 
+
     override fun getTotalSessionDuration(): Flow<Long> {
-        return sessionDao.getTotalSessionDuration()
+        return sessionDao.getTotalSessionsDuration()
     }
 
     override fun getTotalSessionDurationBySubjectId(subjectId: Int): Flow<Long> {
-        return sessionDao.getTotalSessionDurationBySubjectId(subjectId)
+        return sessionDao.getTotalSessionsDurationBySubject(subjectId)
     }
 
-    override fun deleteSessionsBySubjectId(subjectId: Int) {
-         sessionDao.deleteSessionsBySubjectId(subjectId)
+    override fun getRecentFiveSessions(): Flow<List<Session>> {
+        return sessionDao.getAllSessions().take(count = 5)
     }
+
 }

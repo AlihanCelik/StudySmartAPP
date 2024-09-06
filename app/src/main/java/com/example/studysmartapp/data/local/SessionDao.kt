@@ -18,15 +18,15 @@ interface SessionDao {
     @Query("SELECT * FROM Session")
     fun getAllSessions():Flow<List<Session>>
 
-    @Query("SELECT * FROM Session WHERE sessionSubjctId=:subjectId")
-    fun getRecentSessionsForSubject(subjectId:Int):Flow<List<Session>>
+    @Query("SELECT * FROM Session WHERE sessionSubjctId = :subjectId")
+    fun getRecentSessionsForSubject(subjectId: Int): Flow<List<Session>>
 
     @Query("SELECT SUM(duration) FROM Session")
-    fun getTotalSessionDuration():Flow<Long>
+    fun getTotalSessionsDuration(): Flow<Long>
 
-    @Query("SELECT SUM(duration) FROM Session WHERE sessionSubjctId=:subjectId")
-    fun getTotalSessionDurationBySubjectId(subjectId: Int):Flow<Long>
+    @Query("SELECT SUM(duration) FROM Session WHERE sessionSubjctId = :subjectId")
+    fun getTotalSessionsDurationBySubject(subjectId: Int): Flow<Long>
 
-    @Query("DELETE FROM Session WHERE sessionSubjctId=:subjectId")
-    fun deleteSessionsBySubjectId(subjectId:Int)
+    @Query("DELETE FROM Session WHERE sessionSubjctId = :subjectId")
+    fun deleteSessionsBySubjectId(subjectId: Int)
 }
