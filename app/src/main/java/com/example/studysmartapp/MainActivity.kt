@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.ui.graphics.toArgb
 import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.domain.model.Task
@@ -25,11 +26,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 val subjects= listOf(
-    Subject("English", goalHours = 10f, colors = Subject.subjectsCardColors[0], subjectId = 0),
-    Subject("Maths", goalHours = 10f, colors = Subject.subjectsCardColors[1], subjectId = 0),
-    Subject("physics", goalHours = 10f, colors = Subject.subjectsCardColors[2], subjectId = 0),
-    Subject("Geology", goalHours = 10f, colors = Subject.subjectsCardColors[3], subjectId = 0),
-    Subject("Fine Arts", goalHours = 10f, colors = Subject.subjectsCardColors[4], subjectId = 0),
+    Subject("English", goalHours = 10f, colors = Subject.subjectsCardColors[0].map { it.toArgb() }, subjectId = 0),
+    Subject("Maths", goalHours = 10f, colors = Subject.subjectsCardColors[1].map { it.toArgb() }, subjectId = 0),
+    Subject("physics", goalHours = 10f, colors = Subject.subjectsCardColors[2].map { it.toArgb() }, subjectId = 0),
+    Subject("Geology", goalHours = 10f, colors = Subject.subjectsCardColors[3].map { it.toArgb() }, subjectId = 0),
+    Subject("Fine Arts", goalHours = 10f, colors = Subject.subjectsCardColors[4].map { it.toArgb() }, subjectId = 0),
 )
 val tasks= listOf(
     Task(

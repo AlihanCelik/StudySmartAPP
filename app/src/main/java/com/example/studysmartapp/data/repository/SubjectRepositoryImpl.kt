@@ -13,7 +13,7 @@ class SubjectRepositoryImpl @Inject constructor(
         subjectDao.upsertSubject(subject)
     }
 
-    override fun getTotalSubjectCount(): Int {
+    override fun getTotalSubjectCount(): Flow<Int> {
         return subjectDao.getTotalSubjectCount()
     }
 

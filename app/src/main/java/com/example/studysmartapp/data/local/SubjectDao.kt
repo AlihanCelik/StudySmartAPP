@@ -13,7 +13,7 @@ interface SubjectDao {
     suspend fun upsertSubject(subject: Subject)
 
     @Query("SELECT COUNT(*) FROM SUBJECT")
-    fun getTotalSubjectCount():Int
+    fun getTotalSubjectCount():Flow<Int>
 
     @Query("SELECT SUM(goalHours) FROM SUBJECT")
     fun getTotalGoalHours():Flow<Float>

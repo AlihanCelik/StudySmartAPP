@@ -15,6 +15,7 @@ composeBom = "2024.04.01"
 roomRuntime = "2.6.1"
 uiTextGoogleFonts = "1.6.8"
 transportRuntime = "3.3.0"
+lifecycleRuntimeComposeAndroid = "2.8.5"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +44,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "core" }
 transport-runtime = { group = "com.google.android.datatransport", name = "transport-runtime", version.ref = "transportRuntime" }
+androidx-lifecycle-runtime-compose-android = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose-android", version.ref = "lifecycleRuntimeComposeAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

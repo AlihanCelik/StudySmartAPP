@@ -3,6 +3,7 @@ package com.example.studysmartapp.util
 import androidx.compose.ui.graphics.Color
 import com.example.studysmartapp.ui.theme.Orange
 import com.example.studysmartapp.ui.theme.Red
+import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -27,4 +28,9 @@ fun Long?.changeMillsToDateString():String{
             .toLocalDate()
     }?:LocalDate.now()
     return date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
+}
+
+fun Long.toHours(): Float {
+    val hours=this.toFloat()/3600f
+    return "%.2f".format(hours).toFloat()
 }
