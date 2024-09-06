@@ -81,8 +81,8 @@ fun SubjectScreenRoute(
 @Composable
 fun SubjectScreen(
     onBackButtonClick: () -> Unit,
-    onAddTaskButtonClick:()->Unit,
-    onTaskCardClick:(Int?)->Unit
+    onAddTaskButtonClick:() -> Unit,
+    onTaskCardClick:(Int?) -> Unit
 ){
 
     val scrollBehavior=TopAppBarDefaults.exitUntilCollapsedScrollBehavior()

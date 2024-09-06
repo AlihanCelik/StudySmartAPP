@@ -77,6 +77,7 @@ class DaskboardViewModel @Inject constructor(
             }
 
             DashboardEvent.SaveSubject ->saveSubject()
+
             is DashboardEvent.onDeleteSessionButtonClick ->{
                 _state.update {
                     it.copy(session = event.session)
@@ -104,7 +105,7 @@ class DaskboardViewModel @Inject constructor(
             }
         }
     }
-    private fun saveSubject(){
+    private fun saveSubject() {
         viewModelScope.launch {
             try {
                 subjectRepository.upsertSubject(
