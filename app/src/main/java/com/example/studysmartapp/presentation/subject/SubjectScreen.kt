@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.presentation.components.AddSubjectDialog
 import com.example.studysmartapp.presentation.components.CountCard
@@ -63,6 +64,7 @@ data class SubjectScreenNavArgs(
 fun SubjectScreenRoute(
     navigator: DestinationsNavigator
 ){
+    val viewModel:SubjectViewModel= hiltViewModel()
     SubjectScreen(onBackButtonClick = { navigator.navigateUp()},
         onAddTaskButtonClick = {
             val navArg= TaskScreenNavArgs(taskId=null, subjectId = -1)
@@ -82,6 +84,7 @@ fun SubjectScreen(
     onAddTaskButtonClick:()->Unit,
     onTaskCardClick:(Int?)->Unit
 ){
+
     val scrollBehavior=TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val listState= rememberLazyListState()
     val isFabExpanded by remember {

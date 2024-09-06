@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.SubjectListBottomSheet
@@ -50,6 +51,7 @@ import kotlinx.coroutines.launch
 fun SessionScreenRoute(
     navigator: DestinationsNavigator
 ){
+    val viewModel:SessionViewModel= hiltViewModel()
     SessionScreen(onBackButtonClicked = {navigator.navigateUp()})
 }
 
@@ -59,6 +61,7 @@ fun SessionScreenRoute(
 private fun SessionScreen(
     onBackButtonClicked: () -> Unit
 ){
+
     val sheetState= rememberModalBottomSheetState()
     var isSubjectListBottomSheet by remember {
         mutableStateOf(false)
