@@ -105,10 +105,5 @@ class DaskboardViewModel @Inject constructor(
             )
         }
     }
-    private fun deleteSubject(){
-        viewModelScope.launch {
-            subjectRepository.deleteSubject(subjectId = state.value.)
-        }
 
-    }
 }
