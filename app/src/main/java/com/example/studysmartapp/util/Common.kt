@@ -1,5 +1,6 @@
 package com.example.studysmartapp.util
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.ui.graphics.Color
 import com.example.studysmartapp.ui.theme.Orange
 import com.example.studysmartapp.ui.theme.Red
@@ -33,4 +34,11 @@ fun Long?.changeMillsToDateString():String{
 fun Long.toHours(): Float {
     val hours=this.toFloat()/3600f
     return "%.2f".format(hours).toFloat()
+}
+
+sealed class SnackbarEvent{
+    data class ShowSnackbar(
+        val message :String,
+        val duration:SnackbarDuration=SnackbarDuration.Short
+    ):SnackbarEvent()
 }

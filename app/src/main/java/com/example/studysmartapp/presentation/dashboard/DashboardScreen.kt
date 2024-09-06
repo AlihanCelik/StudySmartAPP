@@ -27,8 +27,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,8 +70,12 @@ import com.example.studysmartapp.sessions
 import com.example.studysmartapp.subjects
 import com.example.studysmartapp.tasks
 import com.example.studysmartapp.ui.theme.StudySmartAPPTheme
+import com.example.studysmartapp.util.SnackbarEvent
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
+import java.time.ZoneId
 
 
 @Destination(start = true)
@@ -78,9 +85,11 @@ fun DashboardScreenRoute(
 ){
     val viewModel:DaskboardViewModel= hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+
     DashBoardScreen(
         state = state,
         onEvent = viewModel::onEvent,
+        snackbarEvent = viewModel.snackbarEventFlow,
         onSubjectCardClick ={subjectId->
             subjectId?.let {
                 val navArg=SubjectScreenNavArgs(subjectId=subjectId)
@@ -102,6 +111,7 @@ fun DashboardScreenRoute(
 private fun DashBoardScreen(
     state: DashboardState,
     onEvent:(DashboardEvent)->Unit,
+    snackbarEvent:SharedFlow<SnackbarEvent>,
     onSubjectCardClick:(Int?)->Unit,
     onTaskCardClick:(Int?)->Unit,
     onStartSessionButtonClick:()->Unit
@@ -114,6 +124,22 @@ private fun DashBoardScreen(
     var isDeleteDialog by rememberSaveable {
         mutableStateOf(false)
     }
+    val snackbarHostState=remember{SnackbarHostState()}
+
+    LaunchedEffect(key1 = true) {
+        snackbarEvent.collectLatest { event->
+            when(event){
+                is SnackbarEvent.ShowSnackbar->{
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = event.duration
+                    )
+                }
+            }
+        }
+
+    }
+    
     AddSubjectDialog(
         isOpen = isAddSubjectDialog,
         goalHours=state.goalStudyHours,
@@ -125,7 +151,7 @@ private fun DashBoardScreen(
         onDismissRequest = { isAddSubjectDialog=false },
         onConfirmButtonClick = {
             onEvent(DashboardEvent.SaveSubject)
-            isAddSubjectDialog=true
+            isAddSubjectDialog=false
         })
     DeleteDiaLog(
         isOpen = isDeleteDialog,
@@ -138,6 +164,7 @@ private fun DashBoardScreen(
             isDeleteDialog=false}
     )
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState)},
         topBar = { DashboardScreenTopBar() }
     ) {paddingValues ->
         LazyColumn(
