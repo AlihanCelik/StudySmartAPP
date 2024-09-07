@@ -10,6 +10,7 @@ sealed class SubjectEvent {
     data object UpdateSubject:SubjectEvent()
     data object DeleteSubject:SubjectEvent()
     data object DeleteSessipn:SubjectEvent()
+    data object UpdateProgress:SubjectEvent()
     data class onTaskIsComplteChange(val task:Task):SubjectEvent()
     data class onSubjectCardColorChange(val color:List<Color>):SubjectEvent()
     data class onSubjectNameChange(val name :String):SubjectEvent()
