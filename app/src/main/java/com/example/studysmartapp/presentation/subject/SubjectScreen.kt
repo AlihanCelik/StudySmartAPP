@@ -65,7 +65,10 @@ fun SubjectScreenRoute(
     navigator: DestinationsNavigator
 ){
     val viewModel:SubjectViewModel= hiltViewModel()
-    SubjectScreen(onBackButtonClick = { navigator.navigateUp()},
+    SubjectScreen(
+        state = SubjectState(),
+        onEvent = viewModel::onEvent,
+        onBackButtonClick = { navigator.navigateUp()},
         onAddTaskButtonClick = {
             val navArg= TaskScreenNavArgs(taskId=null, subjectId = -1)
             navigator.navigate(TaskScreenRouteDestination(navArgs = navArg))
@@ -80,6 +83,8 @@ fun SubjectScreenRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectScreen(
+    state: SubjectState,
+    onEvent: (SubjectEvent)->Unit,
     onBackButtonClick: () -> Unit,
     onAddTaskButtonClick:() -> Unit,
     onTaskCardClick:(Int?) -> Unit
@@ -103,23 +108,14 @@ fun SubjectScreen(
     var isDeleteSessionDialog by rememberSaveable {
         mutableStateOf(false)
     }
-    var subjectName by rememberSaveable {
-        mutableStateOf("")
-    }
-    var goalHours by rememberSaveable {
-        mutableStateOf("")
-    }
-    var selectedColor by rememberSaveable {
-        mutableStateOf(Subject.subjectsCardColors.random())
-    }
     AddSubjectDialog(
         isOpen = isEditSubjectDialog,
-        goalHours=goalHours,
-        subjectName = subjectName,
-        selectedColors = selectedColor,
-        onSubjectNameChange = {subjectName=it},
-        onGoalHoursChange = {goalHours=it},
-        onColorChange = {selectedColor=it},
+        goalHours=state.goalStudyHours,
+        subjectName = state.subjectName,
+        selectedColors = state.subjectCardColors,
+        onSubjectNameChange = {onEvent(SubjectEvent.onSubjectNameChange(it))},
+        onGoalHoursChange = {onEvent(SubjectEvent.onGoalStudyHoursChange(it))},
+        onColorChange = {onEvent(SubjectEvent.onSubjectCardColorChange(it))},
         onDismissRequest = { isEditSubjectDialog=false },
         onConfirmButtonClick = {
             isEditSubjectDialog=true
@@ -209,6 +205,7 @@ fun SubjectScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SubjectScreenTopBar(
+
     title:String,
     onBackButton:()->Unit,
     onDeleteButton:()->Unit,
