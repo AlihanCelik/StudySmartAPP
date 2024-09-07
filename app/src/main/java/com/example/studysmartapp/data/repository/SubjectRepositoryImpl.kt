@@ -1,13 +1,17 @@
 package com.example.studysmartapp.data.repository
 
+import com.example.studysmartapp.data.local.SessionDao
 import com.example.studysmartapp.data.local.SubjectDao
+import com.example.studysmartapp.data.local.TaskDao
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.domain.repository.SubjectRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SubjectRepositoryImpl @Inject constructor(
-    private val subjectDao: SubjectDao
+    private val subjectDao: SubjectDao,
+    private val sessionDao:SessionDao,
+    private val taskDao:TaskDao
 ):SubjectRepository {
     override suspend fun upsertSubject(subject: Subject) {
         subjectDao.upsertSubject(subject)
@@ -27,6 +31,8 @@ class SubjectRepositoryImpl @Inject constructor(
 
     override suspend fun deleteSubject(subjectId: Int) {
         subjectDao.deleteSubject(subjectId)
+        sessionDao.deleteSessionsBySubjectId(subjectId)
+        taskDao.deleteTasksBySubjectId(subjectId)
     }
 
     override fun getAllSubjects(): Flow<List<Subject>> {

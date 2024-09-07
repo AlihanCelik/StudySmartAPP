@@ -42,6 +42,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.presentation.components.AddSubjectDialog
 import com.example.studysmartapp.presentation.components.CountCard
@@ -65,8 +66,9 @@ fun SubjectScreenRoute(
     navigator: DestinationsNavigator
 ){
     val viewModel:SubjectViewModel= hiltViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     SubjectScreen(
-        state = SubjectState(),
+        state =state,
         onEvent = viewModel::onEvent,
         onBackButtonClick = { navigator.navigateUp()},
         onAddTaskButtonClick = {
@@ -139,7 +141,7 @@ fun SubjectScreen(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { SubjectScreenTopBar(
-            title = "Engilsh",
+            title = state.subjectName,
             onBackButton = onBackButtonClick,
             onDeleteButton = {isDeleteSubjectDialog=true},
             onEditButtonClick = {isEditSubjectDialog=true},
