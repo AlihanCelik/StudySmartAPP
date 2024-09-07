@@ -165,14 +165,14 @@ fun SubjectScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
-                    studiedHours = "10", goalHours = "15", progress =0.75f)
+                    studiedHours = state.studiedHours.toString(), goalHours = state.goalStudyHours, progress =state.progress)
             }
             tasksList(
                 sectionTitle = "UPCOMING TASKS",
                 emptyListText = "You don't have any upcoming tasks.\n" +
                         "Click the + button in subject screen to add new task.",
-                tasks =tasks,
-                onCheckBoxClick = {},
+                tasks =state.upcomingTasks,
+                onCheckBoxClick = {onEvent(SubjectEvent.onTaskIsComplteChange(it))},
                 onTaskCardClick = onTaskCardClick
             )
             item {
@@ -182,8 +182,8 @@ fun SubjectScreen(
                 sectionTitle = "COMPLETED TASKS",
                 emptyListText = "You don't have any upcoming tasks.\n" +
                         "Click the + button in subject screen to add new task.",
-                tasks =tasks,
-                onCheckBoxClick = {},
+                tasks =state.completedTasks,
+                onCheckBoxClick = {onEvent(SubjectEvent.onTaskIsComplteChange(it))},
                 onTaskCardClick = onTaskCardClick
             )
             item {
@@ -193,8 +193,10 @@ fun SubjectScreen(
                 sectionTitle = "RECENT STUDY SESSIONS",
                 emptyListText = "You don't have any upcoming tasks. \n" +
                         "Click the + button in subject screen to add new task.",
-                sessions = sessions,
-                onDeleteClick = {isDeleteSessionDialog=true}
+                sessions = state.recentSessions,
+                onDeleteClick = {
+                    onEvent(SubjectEvent.onDeleteSessionButtonClick(it))
+                    isDeleteSessionDialog=true}
             )
 
         }
