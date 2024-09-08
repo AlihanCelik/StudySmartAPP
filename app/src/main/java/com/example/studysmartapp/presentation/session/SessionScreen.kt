@@ -33,6 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +43,9 @@ import com.example.studysmartapp.presentation.components.SubjectListBottomSheet
 import com.example.studysmartapp.presentation.components.studySessionsList
 import com.example.studysmartapp.sessions
 import com.example.studysmartapp.subjects
+import com.example.studysmartapp.util.Constants.ACTION_SERVICE_CANCEL
+import com.example.studysmartapp.util.Constants.ACTION_SERVICE_START
+import com.example.studysmartapp.util.Constants.ACTION_SERVICE_STOP
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -61,6 +65,7 @@ fun SessionScreenRoute(
 private fun SessionScreen(
     onBackButtonClicked: () -> Unit
 ){
+    val context= LocalContext.current
 
     val sheetState= rememberModalBottomSheetState()
     var isSubjectListBottomSheet by remember {
@@ -118,9 +123,25 @@ private fun SessionScreen(
                     modifier = Modifier
                         .padding(12.dp)
                         .fillMaxWidth(),
-                    startButtonClick = {},
-                    cancelButtonClick = {},
-                    finishButtonClick = {})
+                    startButtonClick = {
+                        ServiceHelper.triggerForegroundService(
+                            context = context,
+                            action = ACTION_SERVICE_START
+                        )
+                    },
+                    cancelButtonClick = {
+                        ServiceHelper.triggerForegroundService(
+                            context = context,
+                            action = ACTION_SERVICE_CANCEL
+                        )
+                    },
+                    finishButtonClick = {
+                        ServiceHelper.triggerForegroundService(
+                            context = context,
+                            action = ACTION_SERVICE_STOP
+                        )
+                    }
+                )
             }
             studySessionsList(
                 sectionTitle = "RECENT STUDY SESSIONS",
