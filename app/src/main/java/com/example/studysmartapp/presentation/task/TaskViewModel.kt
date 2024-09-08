@@ -8,9 +8,12 @@ import com.example.studysmartapp.domain.repository.TaskRepository
 import com.example.studysmartapp.presentation.navArgs
 import com.example.studysmartapp.presentation.subject.SubjectScreenNavArgs
 import com.example.studysmartapp.subjects
+import com.example.studysmartapp.util.SnackbarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -36,6 +39,8 @@ class TaskViewModel@Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = TaskState()
     )
+    private val _snackbarEventFlow= MutableSharedFlow<SnackbarEvent>()
+    val snackbarEventFlow=_snackbarEventFlow.asSharedFlow()
     fun onEvent(event: TaskEvent){
         when(event){
             TaskEvent.DeleteTask -> TODO()
@@ -71,10 +76,13 @@ class TaskViewModel@Inject constructor(
     }
     private fun saveTask(){
         viewModelScope.launch {
+
             val state=_state.value
             if(state.subjectId==null || state.relatedToSubject==null){
+                _snackbarEventFlow.emit(SnackbarEvent.ShowSnackbar("Please select subject to the task"))
                 return@launch
             }
+            try {
             taskRepository.upsertTask(
                 task = Task(
                     title = state.title,
@@ -87,6 +95,11 @@ class TaskViewModel@Inject constructor(
                     taskId = state.currentTaskId
                 )
             )
+                _snackbarEventFlow.emit(SnackbarEvent.ShowSnackbar("Task Saved Successfully"))
+            }catch (e:Exception){
+                _snackbarEventFlow.emit(SnackbarEvent.ShowSnackbar("Couldn't save task ${e.message}"))
+            }
+
         }
     }
     private fun deleteTask(){

@@ -174,7 +174,7 @@ fun SubjectScreen(
                 "tasks and study sessions will be permanently removed.This action can not be undone",
         onDismissRequest = {isDeleteSessionDialog=false},
         onConfirmButtonClick = {
-            onEvent(SubjectEvent.DeleteSessipn)
+            onEvent(SubjectEvent.DeleteSession)
             isDeleteSessionDialog=false}
     )
     Scaffold(

@@ -27,11 +27,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,9 +54,12 @@ import com.example.studysmartapp.presentation.components.TaskDatePicker
 import com.example.studysmartapp.subjects
 import com.example.studysmartapp.ui.theme.Red
 import com.example.studysmartapp.util.Priority
+import com.example.studysmartapp.util.SnackbarEvent
 import com.example.studysmartapp.util.changeMillsToDateString
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.Instant
 
@@ -70,6 +76,7 @@ fun TaskScreenRoute(
     val viewModel:TaskViewModel= hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
     TaskScreen(
+        snackbarEvent = viewModel.snackbarEventFlow,
         state = state,
         onEvent = viewModel::onEvent,
         onBackButtonClick = {navigator.navigateUp()})
@@ -79,6 +86,7 @@ fun TaskScreenRoute(
 @Composable
 fun TaskScreen(
     state: TaskState,
+    snackbarEvent: SharedFlow<SnackbarEvent>,
     onEvent: (TaskEvent)->Unit,
     onBackButtonClick: () -> Unit
 ) {
@@ -97,6 +105,26 @@ fun TaskScreen(
     var isSubjectListBottomSheet by remember {
         mutableStateOf(false)
     }
+    val snackbarHostState=remember{ SnackbarHostState() }
+
+    LaunchedEffect(key1 = true) {
+        snackbarEvent.collectLatest { event->
+            when(event){
+                is SnackbarEvent.ShowSnackbar->{
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = event.duration
+                    )
+                }
+
+                SnackbarEvent.NavigateUp -> {
+                    onBackButtonClick()
+                }
+            }
+        }
+
+    }
+
     val scope= rememberCoroutineScope()
     SubjectListBottomSheet(
         isOpen = isSubjectListBottomSheet,
@@ -142,6 +170,7 @@ fun TaskScreen(
     }
 
     Scaffold(
+        snackbarHost = {SnackbarHost(hostState = snackbarHostState)},
         topBar = {
             TaskScreenTopBar(
                 isTaskExist = state.currentTaskId!=null,
@@ -242,7 +271,8 @@ fun TaskScreen(
             }
             Button(
                 enabled = taskTitleError==null, 
-                onClick = { onEvent(TaskEvent.SaveTask) },
+                onClick = { onEvent(TaskEvent.SaveTask)
+                          },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 20.dp)

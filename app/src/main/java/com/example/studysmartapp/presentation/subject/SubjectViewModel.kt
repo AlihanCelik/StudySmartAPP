@@ -65,7 +65,7 @@ class SubjectViewModel @Inject constructor(
 
     fun onEvent(event: SubjectEvent){
         when(event){
-            SubjectEvent.DeleteSessipn -> deleteSession()
+            SubjectEvent.DeleteSession -> deleteSession()
             SubjectEvent.DeleteSubject -> deleteSubject()
             SubjectEvent.UpdateSubject -> updateSubject()
             is SubjectEvent.onDeleteSessionButtonClick ->{
@@ -174,6 +174,7 @@ class SubjectViewModel @Inject constructor(
             subjectRepository.getSubjectById(navArgs.subjectId)?.let { subject->
                 _state.update {
                     it.copy(
+                        currentSubjectId = subject.subjectId,
                         subjectName = subject.name,
                         goalStudyHours = subject.goalHours.toString(),
                         subjectCardColors = subject.colors.map { Color(it) }
