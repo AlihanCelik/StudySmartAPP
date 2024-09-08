@@ -66,6 +66,7 @@ import com.example.studysmartapp.presentation.destinations.SubjectScreenRouteDes
 import com.example.studysmartapp.presentation.destinations.TaskScreenRouteDestination
 import com.example.studysmartapp.presentation.subject.SubjectScreenNavArgs
 import com.example.studysmartapp.presentation.task.TaskScreenNavArgs
+import com.example.studysmartapp.presentation.task.TaskState
 import com.example.studysmartapp.sessions
 import com.example.studysmartapp.subjects
 import com.example.studysmartapp.tasks
@@ -85,9 +86,14 @@ fun DashboardScreenRoute(
 ){
     val viewModel:DaskboardViewModel= hiltViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val tasks by viewModel.tasks.collectAsStateWithLifecycle()
+    val recentSessions by viewModel.recentSession.collectAsStateWithLifecycle()
+
 
     DashBoardScreen(
         state = state,
+        tasks = tasks,
+        recentSessions = recentSessions,
         onEvent = viewModel::onEvent,
         snackbarEvent = viewModel.snackbarEventFlow,
         onSubjectCardClick ={subjectId->
@@ -110,6 +116,8 @@ fun DashboardScreenRoute(
 @Composable
 private fun DashBoardScreen(
     state: DashboardState,
+    tasks: List<Task>,
+    recentSessions: List<Session>,
     onEvent:(DashboardEvent)->Unit,
     snackbarEvent:SharedFlow<SnackbarEvent>,
     onSubjectCardClick:(Int?)->Unit,
@@ -214,7 +222,7 @@ private fun DashBoardScreen(
                 sectionTitle = "RECENT STUDY SESSIONS",
                 emptyListText = "You don't have any upcoming tasks. \n" +
                         "Click the + button in subject screen to add new task.",
-                sessions = sessions,
+                sessions = recentSessions,
                 onDeleteClick = {
                     onEvent(DashboardEvent.onDeleteSessionButtonClick(it))
                     isDeleteDialog=true}
