@@ -8,8 +8,6 @@ import com.example.studysmartapp.domain.model.Task
 import com.example.studysmartapp.domain.repository.SubjectRepository
 import com.example.studysmartapp.domain.repository.TaskRepository
 import com.example.studysmartapp.presentation.navArgs
-import com.example.studysmartapp.presentation.subject.SubjectScreenNavArgs
-import com.example.studysmartapp.subjects
 import com.example.studysmartapp.util.Priority
 import com.example.studysmartapp.util.SnackbarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

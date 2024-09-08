@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.studysmartapp.domain.model.Subject
-import com.example.studysmartapp.subjects
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +62,7 @@ fun SubjectListBottomSheet(
 
 
                 }
-                if (subjects.isEmpty()){
+                if (subject.isEmpty()){
                     item {
                         Text(
                             modifier = Modifier.padding(10.dp)

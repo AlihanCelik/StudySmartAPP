@@ -42,14 +42,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavHost
-import androidx.room.RoomOpenHelper
 import com.example.studysmartapp.R
 import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.model.Subject
@@ -58,7 +53,6 @@ import com.example.studysmartapp.presentation.components.AddSubjectDialog
 import com.example.studysmartapp.presentation.components.CountCard
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.SubjectCard
-import com.example.studysmartapp.presentation.components.TaskCheckBox
 import com.example.studysmartapp.presentation.components.studySessionsList
 import com.example.studysmartapp.presentation.components.tasksList
 import com.example.studysmartapp.presentation.destinations.SessionScreenRouteDestination
@@ -66,11 +60,6 @@ import com.example.studysmartapp.presentation.destinations.SubjectScreenRouteDes
 import com.example.studysmartapp.presentation.destinations.TaskScreenRouteDestination
 import com.example.studysmartapp.presentation.subject.SubjectScreenNavArgs
 import com.example.studysmartapp.presentation.task.TaskScreenNavArgs
-import com.example.studysmartapp.presentation.task.TaskState
-import com.example.studysmartapp.sessions
-import com.example.studysmartapp.subjects
-import com.example.studysmartapp.tasks
-import com.example.studysmartapp.ui.theme.StudySmartAPPTheme
 import com.example.studysmartapp.util.SnackbarEvent
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph

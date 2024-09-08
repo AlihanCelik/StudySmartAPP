@@ -51,8 +51,6 @@ import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.SubjectListBottomSheet
 import com.example.studysmartapp.presentation.components.TaskCheckBox
 import com.example.studysmartapp.presentation.components.TaskDatePicker
-import com.example.studysmartapp.subjects
-import com.example.studysmartapp.ui.theme.Red
 import com.example.studysmartapp.util.Priority
 import com.example.studysmartapp.util.SnackbarEvent
 import com.example.studysmartapp.util.changeMillsToDateString

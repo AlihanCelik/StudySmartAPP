@@ -1,10 +1,12 @@
 package com.example.studysmartapp
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.app.ActivityCompat
 import com.example.studysmartapp.domain.model.Session
 import com.example.studysmartapp.domain.model.Subject
 import com.example.studysmartapp.domain.model.Task
@@ -21,7 +23,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             StudySmartAPPTheme {
                 DestinationsNavHost(navGraph = NavGraphs.root)
+
             }
+        }
+        requestPermission()
+    }
+    private fun requestPermission(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),0
+            )
         }
     }
 }

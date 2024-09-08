@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:name=".StudySmartApp"
         android:allowBackup="true"
@@ -27,7 +30,8 @@
         <service android:name=".presentation.session.StudyServiceTimerService"
             android:exported="false"
             android:foregroundServiceType="dataSync"
-            android:enabled="true">
+            android:enabled="true"
+            tools:ignore="ForegroundServicePermission">
         </service>
     </application>
 
