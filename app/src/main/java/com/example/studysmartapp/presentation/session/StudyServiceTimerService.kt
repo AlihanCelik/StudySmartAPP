@@ -48,9 +48,7 @@ class StudyServiceTimerService: Service() {
     var currentTimerState= mutableStateOf(TimerState.IDLE)
         private set
 
-    override fun onBind(p0: Intent?): IBinder? {
-        TODO("Not yet implemented")
-    }
+    override fun onBind(p0: Intent?): IBinder? =null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action.let {
@@ -60,7 +58,6 @@ class StudyServiceTimerService: Service() {
                     startTime{hours,minutes,seconds ->
                         updateNotification(hours,minutes,seconds)
                     }
-
                 }
                 ACTION_SERVICE_STOP ->{
                     stopTimer()

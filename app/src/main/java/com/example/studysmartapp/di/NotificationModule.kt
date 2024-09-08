@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import androidx.core.app.NotificationCompat
 import com.example.studysmartapp.R
+import com.example.studysmartapp.presentation.session.ServiceHelper
 import com.example.studysmartapp.util.Constants.NOTIFICATION_CHANNEL_ID
 import dagger.Module
 import dagger.Provides
@@ -26,6 +27,7 @@ object NotificationModule {
             .setContentText("00:00:00")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(true)
+            .setContentIntent(ServiceHelper.clickPendingIntent(context))
     }
 
     @ServiceScoped

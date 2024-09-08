@@ -1,5 +1,6 @@
 package com.example.studysmartapp.presentation.session
 
+import android.content.Intent
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,11 +47,19 @@ import com.example.studysmartapp.subjects
 import com.example.studysmartapp.util.Constants.ACTION_SERVICE_CANCEL
 import com.example.studysmartapp.util.Constants.ACTION_SERVICE_START
 import com.example.studysmartapp.util.Constants.ACTION_SERVICE_STOP
+import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 
-@Destination
+@Destination(
+    deepLinks = [
+        DeepLink(
+            action = Intent.ACTION_VIEW,
+            uriPattern = "study_smart://dashboard/session"
+        )
+    ]
+)
 @Composable
 fun SessionScreenRoute(
     navigator: DestinationsNavigator
@@ -234,12 +243,12 @@ private fun ButtonsSection(
         modifier=modifier,
         horizontalArrangement = Arrangement.SpaceBetween
     ){
-        Button(onClick = startButtonClick) {
+        Button(onClick = cancelButtonClick) {
             Text(text = "Cancel",
                 modifier=Modifier
                     .padding(horizontal = 10.dp, vertical = 5.dp))
         }
-        Button(onClick = cancelButtonClick) {
+        Button(onClick = startButtonClick) {
             Text(text = "Start",
                 modifier=Modifier
                     .padding(horizontal = 10.dp, vertical = 5.dp))
