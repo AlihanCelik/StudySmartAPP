@@ -99,12 +99,30 @@ class DaskboardViewModel @Inject constructor(
                 }
             }
             is DashboardEvent.onTaskIsCompleteChange ->{
-                _state.update {
-                    it.copy()
-                }
+
+                    updateTask(event.task)
+
             }
         }
     }
+
+    private fun updateTask(task: Task){
+        viewModelScope.launch {
+            try {
+                taskRepository.upsertTask(task = task.copy(
+                    isComplete = !task.isComplete
+                ))
+                _snackbarEventFlow.emit(
+                    SnackbarEvent.ShowSnackbar("Saved in completed tasks.")
+                )
+            }catch (e:Exception){
+                _snackbarEventFlow.emit(
+                    SnackbarEvent.ShowSnackbar(message = "Couldn't update task ${e.message}",SnackbarDuration.Long)
+                )
+            }
+        }
+    }
+
     private fun saveSubject() {
         viewModelScope.launch {
             try {

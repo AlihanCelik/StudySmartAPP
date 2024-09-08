@@ -1,5 +1,6 @@
 package com.example.studysmartapp.presentation.task
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,7 @@ import com.example.studysmartapp.subjects
 import com.example.studysmartapp.util.Priority
 import com.example.studysmartapp.util.SnackbarEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Instant
 import javax.inject.Inject
 
@@ -52,7 +55,7 @@ class TaskViewModel@Inject constructor(
     }
     fun onEvent(event: TaskEvent){
         when(event){
-            TaskEvent.DeleteTask -> TODO()
+            TaskEvent.DeleteTask -> deleteTask()
             TaskEvent.SaveTask -> saveTask()
             is TaskEvent.onDateChange ->{
                 _state.update {
@@ -64,7 +67,11 @@ class TaskViewModel@Inject constructor(
                     it.copy(description = event.description)
                 }
             }
-            TaskEvent.onIsCompleteChange -> TODO()
+            TaskEvent.onIsCompleteChange -> {
+                _state.update {
+                    it.copy(isTaskComplete = !_state.value.isTaskComplete)
+                }
+            }
             is TaskEvent.onPriorityChange ->{
                 _state.update {
                     it.copy(priority = event.priority)
@@ -114,8 +121,26 @@ class TaskViewModel@Inject constructor(
     private fun deleteTask(){
         viewModelScope.launch {
             try {
+                val currentTaskId=state.value.currentTaskId
+                if(currentTaskId!=null){
+                    withContext(Dispatchers.IO){
 
+                        taskRepository.deleteTask(taskId = currentTaskId)
+                    }
+                    _snackbarEventFlow.emit(
+                        SnackbarEvent.ShowSnackbar(message = "Task deleted successfully")
+                    )
+                    _snackbarEventFlow.emit(SnackbarEvent.NavigateUp)
+                }else{
+                    _snackbarEventFlow.emit(
+                        SnackbarEvent.ShowSnackbar(message = "No Task to delete")
+                    )
+                }
             }catch (e:Exception){
+                _snackbarEventFlow.emit(
+                    SnackbarEvent.ShowSnackbar(message = "Couldn't delete task ${e.message}",
+                        SnackbarDuration.Long)
+                )
 
             }
         }
@@ -133,7 +158,7 @@ class TaskViewModel@Inject constructor(
                             priority = Priority.fromInt(task.priority),
                             relatedToSubject = task.relatedToSubject,
                             isTaskComplete = task.isComplete,
-                            currentTaskId = task.taskSubjectId,
+                            currentTaskId = task.taskId,
                             subjectId = task.taskSubjectId
                         )
                     }

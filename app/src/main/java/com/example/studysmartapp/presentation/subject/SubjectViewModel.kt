@@ -7,6 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.studysmartapp.domain.model.Subject
+import com.example.studysmartapp.domain.model.Task
 import com.example.studysmartapp.domain.repository.SessionRepository
 import com.example.studysmartapp.domain.repository.SubjectRepository
 import com.example.studysmartapp.domain.repository.TaskRepository
@@ -89,6 +90,7 @@ class SubjectViewModel @Inject constructor(
                 }
             }
             is SubjectEvent.onTaskIsComplteChange ->{
+                updateTask(event.task)
 
             }
 
@@ -146,6 +148,27 @@ class SubjectViewModel @Inject constructor(
                     SnackbarEvent.ShowSnackbar(message = "Couldn't delete subject ${e.message}",SnackbarDuration.Long)
                 )
 
+            }
+        }
+    }
+    private fun updateTask(task: Task){
+        viewModelScope.launch {
+            try {
+                taskRepository.upsertTask(task = task.copy(
+                    isComplete = !task.isComplete
+                ))
+                if (task.isComplete){
+                    _snackbarEventFlow.emit(SnackbarEvent.ShowSnackbar(message = "Saved in upcoming tasks"))
+                }else{
+                    _snackbarEventFlow.emit(
+                        SnackbarEvent.ShowSnackbar("Saved in completed tasks.")
+                    )
+                }
+
+            }catch (e:Exception){
+                _snackbarEventFlow.emit(
+                    SnackbarEvent.ShowSnackbar(message = "Couldn't update task ${e.message}",SnackbarDuration.Long)
+                )
             }
         }
     }

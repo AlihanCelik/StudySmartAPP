@@ -79,7 +79,7 @@ fun SubjectScreenRoute(
         onEvent = viewModel::onEvent,
         onBackButtonClick = { navigator.navigateUp()},
         onAddTaskButtonClick = {
-            val navArg= TaskScreenNavArgs(taskId=null, subjectId = -1)
+            val navArg= TaskScreenNavArgs(taskId=null, subjectId = state.currentSubjectId)
             navigator.navigate(TaskScreenRouteDestination(navArgs = navArg))
         },
         onTaskCardClick = {taskId->
