@@ -52,7 +52,6 @@ class SessionViewModel@Inject constructor(
                 }
 
             }
-            SessionEvent.CheckSubjectId -> notifyToUpdateSubject()
             SessionEvent.DeleteSession -> DeleteSession()
             is SessionEvent.SaveSession -> insertSession(event.duration)
             is SessionEvent.UpdateSubjectIdAndRelatedSubject -> {
@@ -66,6 +65,10 @@ class SessionViewModel@Inject constructor(
                     it.copy(relatedToSubject = event.subject.name,
                         subjectId = event.subject.subjectId)
                 }
+            }
+
+            SessionEvent.NotifyToUpdateSubject -> {
+                notifyToUpdateSubject()
             }
         }
     }
