@@ -90,9 +90,12 @@ dependencies {
     //fonts
     implementation(libs.androidx.ui.text.google.fonts)
 
+
     //compose destination
-    implementation(libs.core)
-    ksp(libs.ksp)
+    implementation(libs.core.v1102)
+    ksp(libs.ksp.v1102)
+
+
 
 
 
