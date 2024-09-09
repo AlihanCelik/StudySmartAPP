@@ -31,10 +31,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,19 +50,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.studysmartapp.domain.model.Session
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.studysmartapp.presentation.components.DeleteDiaLog
 import com.example.studysmartapp.presentation.components.SubjectListBottomSheet
 import com.example.studysmartapp.presentation.components.studySessionsList
-import com.example.studysmartapp.sessions
-import com.example.studysmartapp.subjects
 import com.example.studysmartapp.ui.theme.Red
 import com.example.studysmartapp.util.Constants.ACTION_SERVICE_CANCEL
 import com.example.studysmartapp.util.Constants.ACTION_SERVICE_START
 import com.example.studysmartapp.util.Constants.ACTION_SERVICE_STOP
+import com.example.studysmartapp.util.SnackbarEvent
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.Duration
 
@@ -78,14 +81,21 @@ fun SessionScreenRoute(
     timerService:StudyServiceTimerService
 ){
     val viewModel:SessionViewModel= hiltViewModel()
-    SessionScreen(onBackButtonClicked = {navigator.navigateUp()},
-        timerService=timerService)
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    SessionScreen(
+        state = state,
+        onEvent = viewModel::onEvent, onBackButtonClicked = {navigator.navigateUp()},
+        timerService=timerService,
+        snackbarEvent = viewModel.snackbarEventFlow)
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SessionScreen(
+    snackbarEvent: SharedFlow<SnackbarEvent>,
+    state: SessionState,
+    onEvent: (SessionEvent)->Unit,
     onBackButtonClicked: () -> Unit,
     timerService: StudyServiceTimerService
 ){
@@ -105,12 +115,32 @@ private fun SessionScreen(
         mutableStateOf(false)
     }
     val scope= rememberCoroutineScope()
+    val snackbarHostState=remember{ SnackbarHostState() }
+
+    LaunchedEffect(key1 = true) {
+        snackbarEvent.collectLatest { event->
+            when(event){
+                is SnackbarEvent.ShowSnackbar->{
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        duration = event.duration
+                    )
+                }
+
+                SnackbarEvent.NavigateUp ->{
+                }
+            }
+        }
+
+    }
 
     DeleteDiaLog(
         isOpen = isDeleteDialogOpen,
         title = "Delete Task?",
         onDismissRequest = {isDeleteDialogOpen=false },
-        onConfirmButtonClick = {isDeleteDialogOpen=false},
+        onConfirmButtonClick = {
+            onEvent(SessionEvent.DeleteSession)
+            isDeleteDialogOpen=false},
         onBodyText = "Are you sure,you want to delete this task ? " +
                 "This action can not be undone."
     )
@@ -118,7 +148,7 @@ private fun SessionScreen(
     SubjectListBottomSheet(
         isOpen = isSubjectListBottomSheet,
         sheetState = sheetState,
-        subject = subjects,
+        subject = state.subjects,
         onSubjectClicked ={
             scope.launch { sheetState.hide() }.invokeOnCompletion {
                 if(!sheetState.isVisible) isSubjectListBottomSheet=false
@@ -184,8 +214,10 @@ private fun SessionScreen(
                 sectionTitle = "RECENT STUDY SESSIONS",
                 emptyListText = "You don't have any upcoming tasks. \n" +
                         "Click the + button in subject screen to add new task.",
-                sessions = sessions,
-                onDeleteClick = {isDeleteDialogOpen=true}
+                sessions = state.sessions,
+                onDeleteClick = {
+                    onEvent(SessionEvent.onDeleteSessionButtonClick(it))
+                    isDeleteDialogOpen=true}
             )
 
         }
