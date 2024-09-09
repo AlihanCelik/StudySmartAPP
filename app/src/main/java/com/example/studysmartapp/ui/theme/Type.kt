@@ -26,7 +26,7 @@ val poppinsFont = FontFamily(
     )
 )
 
-val nerkoName=GoogleFont("Nerko One")
+val nerkoName=GoogleFont("Rowdies")
 val nerkoFont = FontFamily(
     Font(
         googleFont = nerkoName,
