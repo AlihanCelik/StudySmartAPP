@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
+import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +34,8 @@ class StudyServiceTimerService: Service() {
 
     private lateinit var timer:Timer
 
+    private val binder=StudySessionTimerBinder()
+
     var duration:Duration=Duration.ZERO
         private set
 
@@ -48,7 +51,7 @@ class StudyServiceTimerService: Service() {
     var currentTimerState= mutableStateOf(TimerState.IDLE)
         private set
 
-    override fun onBind(p0: Intent?): IBinder? =null
+    override fun onBind(p0: Intent?)=null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.action.let {
@@ -133,6 +136,10 @@ class StudyServiceTimerService: Service() {
             this@StudyServiceTimerService.seconds.value=seconds.pad()
 
         }
+    }
+
+    inner class StudySessionTimerBinder : Binder(){
+        fun getService():StudyServiceTimerService=this@StudyServiceTimerService
     }
 }
 
