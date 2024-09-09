@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -66,6 +67,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.Duration
+import kotlin.time.DurationUnit
 
 @Destination(
     deepLinks = [
@@ -153,10 +155,12 @@ private fun SessionScreen(
             scope.launch { sheetState.hide() }.invokeOnCompletion {
                 if(!sheetState.isVisible) isSubjectListBottomSheet=false
             }
+            onEvent(SessionEvent.onRelatedSubjectChange(it))
         },
         onDismissReguest = {isSubjectListBottomSheet=false})
 
     Scaffold (
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {SessionScreenTopBar(onBackButtonClicked = onBackButtonClicked)}
     ){paddingValues ->
         LazyColumn(
@@ -177,7 +181,7 @@ private fun SessionScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp),
-                    relatedToSubject = "English",
+                    relatedToSubject = state.relatedToSubject?:"Select Subject",
                     selectSubjectButtonClick = {isSubjectListBottomSheet=true}
                 )
             }
@@ -201,10 +205,8 @@ private fun SessionScreen(
                         )
                     },
                     finishButtonClick = {
-                        ServiceHelper.triggerForegroundService(
-                            context = context,
-                            action = ACTION_SERVICE_STOP
-                        )
+                        val duration=timerService.duration.toLong(DurationUnit.SECONDS)
+                        onEvent(SessionEvent.SaveSession(duration))
                     },
                     timerState = currenctTimerState,
                     seconds = seconds
@@ -288,7 +290,7 @@ private fun RelatedToSubjectSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
-            Text(text = "English",
+            Text(text = relatedToSubject,
                 style = MaterialTheme.typography.bodyLarge
             )
             IconButton(onClick = { selectSubjectButtonClick()}) {

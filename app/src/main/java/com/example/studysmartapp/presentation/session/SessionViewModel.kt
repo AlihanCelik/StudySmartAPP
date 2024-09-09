@@ -52,24 +52,73 @@ class SessionViewModel@Inject constructor(
                 }
 
             }
-            SessionEvent.CheckSubjectId -> TODO()
-            SessionEvent.DeleteSession -> TODO()
+            SessionEvent.CheckSubjectId -> notifyToUpdateSubject()
+            SessionEvent.DeleteSession -> DeleteSession()
             is SessionEvent.SaveSession -> insertSession(event.duration)
-            is SessionEvent.UpdateSubjectIdAndRelatedSubject -> TODO()
-            is SessionEvent.onRelatedSubjectChange -> TODO()
+            is SessionEvent.UpdateSubjectIdAndRelatedSubject -> {
+                _state.update {
+                    it.copy(subjectId = event.subjectId,
+                        relatedToSubject = event.relatedToSubject)
+                }
+            }
+            is SessionEvent.onRelatedSubjectChange ->{
+                _state.update {
+                    it.copy(relatedToSubject = event.subject.name,
+                        subjectId = event.subject.subjectId)
+                }
+            }
         }
+    }
+    private fun notifyToUpdateSubject(){
+        viewModelScope.launch {
+            if (state.value.subjectId == null || state.value.relatedToSubject == null) {
+                _snackbarEventFlow.emit(
+                    SnackbarEvent.ShowSnackbar(
+                        message = "Please select subject related to the session."
+                    )
+                )
+            }
+        }
+    }
+
+    private fun DeleteSession(){
+        viewModelScope.launch {
+            try {
+                sessionRepository.deleteSession(state.value.session?:return@launch)
+                _snackbarEventFlow.emit(SnackbarEvent.ShowSnackbar("Session deleted successfully" ))
+
+        }catch (e:Exception){
+            _snackbarEventFlow.emit(SnackbarEvent.ShowSnackbar("Couldn't delete session ${e.message}" ))
+
+            }        }
     }
 
     private fun insertSession(duration: Long){
         viewModelScope.launch {
-            sessionRepository.insertSession(
-                session = Session(
-                    sessionSubjctId = state.value.subjectId?:-1,
-                    relatedToSubject = state.value.relatedToSubject ?: "",
-                    date = Instant.now().toEpochMilli(),
-                    duration=duration
+            if (duration < 36) {
+                _snackbarEventFlow.emit(
+                    SnackbarEvent.ShowSnackbar(
+                        message = "Single session can not be less than 36 seconds"
+                    )
                 )
-            )
+                return@launch
+            }
+            try {
+                sessionRepository.insertSession(
+                    session = Session(
+                        sessionSubjctId = state.value.subjectId?:-1,
+                        relatedToSubject = state.value.relatedToSubject ?: "",
+                        date = Instant.now().toEpochMilli(),
+                        duration=duration
+                    )
+
+                )
+                _snackbarEventFlow.emit(SnackbarEvent.ShowSnackbar("Session saved successfully" ))
+            }catch (e:Exception){
+                _snackbarEventFlow.emit(SnackbarEvent.ShowSnackbar("Couldn't save session ${e.message}" ))
+
+            }
+
         }
     }
 }
