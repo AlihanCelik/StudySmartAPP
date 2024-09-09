@@ -2,6 +2,13 @@ package com.example.studysmartapp.presentation.session
 
 import android.content.Intent
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -55,6 +62,7 @@ import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
+import java.time.Duration
 
 @Destination(
     deepLinks = [
@@ -218,13 +226,13 @@ private fun TimerSection(
             .border(5.dp, MaterialTheme.colorScheme.surfaceVariant, CircleShape)
         )
         Row{
-            AnimatedContent(targetState = hours, label = hours) {hours->
+            AnimatedContent(targetState = hours, label = hours, transitionSpec = { timerTextAnimation() }) { hours->
                 Text(text = "${hours}:", style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp))
             }
-            AnimatedContent(targetState = minutes, label = minutes) {minutes->
+            AnimatedContent(targetState = minutes, label = minutes, transitionSpec = { timerTextAnimation() }) {minutes->
                 Text(text = "${minutes}:", style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp))
             }
-            AnimatedContent(targetState = seconds, label = seconds) {seconds->
+            AnimatedContent(targetState = seconds, label = seconds, transitionSpec = { timerTextAnimation() }) {seconds->
                 Text(text = seconds, style = MaterialTheme.typography.titleLarge.copy(fontSize = 45.sp))
             }
         }
@@ -304,4 +312,13 @@ private fun ButtonsSection(
         }
 
     }
+}
+
+private fun timerTextAnimation(duration: Int=600):ContentTransform{
+    return slideInVertically(animationSpec = tween(duration)){fullHeight ->fullHeight} +
+    fadeIn(animationSpec = tween(duration)) togetherWith
+    slideOutVertically(animationSpec = tween(duration)){fullHeight ->fullHeight  }+
+    fadeOut(animationSpec = tween(duration))
+
+
 }
