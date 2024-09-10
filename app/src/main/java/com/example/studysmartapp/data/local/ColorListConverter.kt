@@ -1,7 +1,6 @@
 package com.example.studysmartapp.data.local
 
 import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 
 
 class ColorListConverter {
